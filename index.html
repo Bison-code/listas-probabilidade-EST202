@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download das Listas de Exercícios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 40px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            font-size: 16px;
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        img {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="logo_ufop.png" alt="Logo UFOP"> <!-- Substitua pelo logo da instituição -->
+        <h1>Listas de Exercícios</h1>
+        <h3>Disciplina: Probabilidade e Estatística</h3>
+        <h4>Professor: Marcelo Ribeiro</h4>
+        <h4>Turma: 2024/1</h4>
+        <p>Digite sua matrícula para baixar sua lista personalizada:</p>
+        
+        <input type="text" id="matricula" placeholder="Digite sua matrícula">
+        <button onclick="baixarLista()">Baixar Lista</button>
+        
+        <p id="mensagem" style="color: red;"></p>
+    </div>
+
+    <script>
+        function baixarLista() {
+            var matricula = document.getElementById("matricula").value.trim();
+            var urlBase = "https://seu-usuario.github.io/listas-probabilidade/listas/";
+            
+            if (matricula === "") {
+                document.getElementById("mensagem").innerText = "Por favor, insira sua matrícula.";
+                return;
+            }
+
+            var arquivo = "lista_" + matricula + ".html";
+            var urlArquivo = urlBase + arquivo;
+
+            // Verificar se o arquivo existe
+            fetch(urlArquivo, { method: 'HEAD' })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = urlArquivo;
+                } else {
+                    document.getElementById("mensagem").innerText = "Matrícula não encontrada. Verifique e tente novamente.";
+                }
+            })
+            .catch(error => {
+                document.getElementById("mensagem").innerText = "Erro ao verificar a matrícula.";
+            });
+        }
+    </script>
+
+</body>
+</html>

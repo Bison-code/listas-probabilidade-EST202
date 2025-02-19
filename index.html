@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download das Listas de Exercícios</title>
+    <title>Download das Provas II</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,11 +42,11 @@
 <body>
 
     <div class="container">
-        <img src="logo-ufop.png" alt="Logo UFOP" style="max-width: 200px; margin-bottom: 10px;"> <!-- Substitua pelo logo da instituição -->
-        <h1>Listas de Exercícios</h1>
-        <h3>Disciplina: Probabilidade e Estatística</h3>
+        <img src="logo-ufop.png" alt="Logo UFOP" style="max-width: 150px; margin-bottom: 10px;"> <!-- Substitua pelo logo da instituição -->
+        <h1>Prova II - parte 1</h1>
+        <h3>Disciplina: EST 202 - Estatística e Probabilidade</h3>
         <h4>Professor: Marcelo Ribeiro</h4>
-        <h4>Turma: 2024/1</h4>
+        <h4>Turma: 2024/2</h4>
         <p>Digite sua matrícula para baixar sua lista personalizada:</p>
         
         <input type="text" id="matricula" placeholder="Digite sua matrícula">
@@ -61,7 +61,7 @@
             var urlBase = "https://Bison-code.github.io/listas-probabilidade-EST202/listas/";
             
             if (matricula === "") {
-                document.getElementById("mensagem").innerText = "Por favor, insira sua matrícula.";
+                document.getElementById("mensagem").innerText = "Por favor, insira sua matrícula (SEM PONTUAÇÃO).";
                 return;
             }
 

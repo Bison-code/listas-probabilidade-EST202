@@ -126,91 +126,65 @@
             }
         }
 
-       async function corrigirProva() {
+        async function corrigirProva() {
             let matricula = document.getElementById("matriculaCorrecao").value.trim();
             if (matricula === "") return;
 
-            // Verifica se a matrícula já enviou antes (exceto 1111111)
             if (matricula !== "1111111") {
-            let checkResponse = await fetch(`https://script.google.com/macros/s/SEU_SCRIPT_ID/exec?Matricula=${matricula}`);
-            let checkData = await checkResponse.text();
+                let checkResponse = await fetch(`https://script.google.com/macros/s/AKfycbw_DGQnx5UrbCcPebZ2o5gxJddYE7_c3KWs7oCeAL93eayEXbKRgqnM8smO_ksgZXKRNQ/exec?Matricula=${matricula}`);
+                let checkData = await checkResponse.text();
 
-            if (checkData.includes("EXISTENTE")) {
-            document.getElementById("resultado").innerText = "Você já enviou sua resposta. Não é possível corrigir novamente.";
-            return;
-        }
-    }
+                if (checkData.includes("EXISTENTE")) {
+                    document.getElementById("resultado").innerText = "Você já enviou sua resposta. Não é possível corrigir novamente.";
+                    return;
+                }
+            }
 
             let respostas = document.getElementById("respostas").value.trim().split(",");
             if (respostas.length !== 8) {
-            document.getElementById("resultado").innerText = "Por favor, insira exatamente 8 respostas separadas por vírgula.";
-            return;
-    }
+                document.getElementById("resultado").innerText = "Por favor, insira exatamente 8 respostas separadas por vírgula.";
+                return;
+            }
 
-    // ⚡️ Carregar o gabarito correto (cada aluno tem um gabarito próprio)
             let response = await fetch(`gabaritos/${matricula}.json`);
             if (!response.ok) {
-            document.getElementById("resultado").innerText = "Matrícula não encontrada. Verifique se digitou corretamente.";
-            return;
-    }
+                document.getElementById("resultado").innerText = "Matrícula não encontrada. Verifique se digitou corretamente.";
+                return;
+            }
 
             let gabarito = await response.json();
             let nota = 0;
             let feedback = "<h2>Resultado:</h2><ul>";
 
-    // ⚡️ Comparação de respostas com o gabarito
             for (let i = 0; i < 8; i++) {
-            let correto = parseFloat(gabarito[i]).toFixed(2);
-            let aluno = parseFloat(respostas[i]).toFixed(2);
+                let correto = parseFloat(gabarito[i]).toFixed(2);
+                let aluno = parseFloat(respostas[i]).toFixed(2);
 
-            if (correto === aluno) {
-            nota += 1.25;  // Cada questão vale 1.25 pontos
-            feedback += `<li>Questão ${i + 1}: ✅ Correta</li>`;
-        } else {
-            feedback += `<li>Questão ${i + 1}: ❌ Errada (Correta: ${correto})</li>`;
-        }
-    }
+                if (correto === aluno) {
+                    nota += 1.25;  
+                    feedback += `<li>Questão ${i + 1}: Correta</li>`;
+                } else {
+                    feedback += `<li>Questão ${i + 1}: Errada (Correta: ${correto})</li>`;
+                }
+            }
 
-    feedback += `</ul><h3>Sua nota: ${nota.toFixed(2)}/10</h3>`;
-    document.getElementById("resultado").innerHTML = feedback;
-
-    // ⚡️ Salvar a nota no Google Sheets
-        let dados = {
-        Matricula: matricula,
-        Data: new Date().toLocaleDateString(),
-        Hora: new Date().toLocaleTimeString(),
-        Nota: nota.toFixed(2)
-    };
-
-        await fetch("https://script.google.com/macros/s/SEU_SCRIPT_ID/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dados)
-    });
-
-    document.getElementById("resultado").innerHTML += "<br><strong>Respostas registradas na planilha.</strong>";
-}
+            feedback += `</ul><h3>Sua nota: ${nota.toFixed(2)}/10</h3>`;
+            document.getElementById("resultado").innerHTML = feedback;
 
             let dados = {
                 Matricula: matricula,
                 Data: new Date().toLocaleDateString(),
                 Hora: new Date().toLocaleTimeString(),
-                Nota: "Nota calculada aqui"
+                Nota: nota.toFixed(2)
             };
 
-            try {
-                let response = await fetch("https://script.google.com/macros/s/AKfycbw_DGQnx5UrbCcPebZ2o5gxJddYE7_c3KWs7oCeAL93eayEXbKRgqnM8smO_ksgZXKRNQ/exec", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(dados)
-                });
+            await fetch("https://script.google.com/macros/s/AKfycbw_DGQnx5UrbCcPebZ2o5gxJddYE7_c3KWs7oCeAL93eayEXbKRgqnM8smO_ksgZXKRNQ/exec", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dados)
+            });
 
-                let result = await response.text();
-                document.getElementById("resultado").innerText = result;
-            } catch (error) {
-                document.getElementById("resultado").innerText = "Erro ao enviar respostas.";
-                console.error(error);
-            }
+            document.getElementById("resultado").innerHTML += "<br><strong>Respostas registradas na planilha.</strong>";
         }
     </script>
 </body>

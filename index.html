@@ -25,13 +25,13 @@
         }
         .container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 30px;
+            flex-direction: row;
+            justify-content: center;
+            gap: 50px;
             margin-top: 20px;
         }
         .box {
-            max-width: 500px;
+            max-width: 450px;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -69,24 +69,20 @@
     
     <div class="container">
         <div class="box">
-            <h3>Baixar Lista Personalizada</h3>
+            <h3>Acessar Prova II - parte 1</h3>
             <p>Digite sua matrícula:</p>
             <input type="text" id="matricula" placeholder="Digite sua matrícula">
-            <button onclick="baixarLista()">Baixar Lista</button>
+            <button onclick="baixarLista()">Prova</button>
             <p id="mensagem" style="color: red;"></p>
         </div>
 
         <div class="box">
-            <h3>Envio de Respostas</h3>
+            <h3>Envio e Correção da Prova</h3>
             <p>Digite sua matrícula para habilitar o preenchimento das respostas:</p>
             <input type="text" id="matriculaCorrecao" placeholder="Digite sua matrícula" oninput="habilitarRespostas()">
             <p>Digite suas respostas separadas por vírgula:</p>
             <input type="text" id="respostas" placeholder="Ex: 0.75,0.68,0.85,0.92,0.78,0.65,0.88,0.72" disabled>
-            <button onclick="corrigirProva()" disabled id="botaoCorrigir">Enviar Respostas</button>
-        </div>
-
-        <div class="box">
-            <h3>Correção Automática</h3>
+            <button onclick="corrigirProva()" disabled id="botaoCorrigir">Envio das respostas</button>
             <p id="tentativasMsg"></p>
             <p id="resultado"></p>
         </div>

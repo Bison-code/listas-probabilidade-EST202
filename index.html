@@ -86,6 +86,7 @@
         </div>
     </div>
 
+
     <script>
         function baixarLista() {
             var matricula = document.getElementById("matricula").value.trim();
@@ -112,73 +113,58 @@
             });
         }
 
+        function habilitarRespostas() {
+            let matricula = document.getElementById("matriculaCorrecao").value.trim();
+            let botao = document.getElementById("botaoCorrigir");
+            let campoRespostas = document.getElementById("respostas");
+
+            if (matricula === "1111111" || matricula !== "") {
+                botao.disabled = false;
+                campoRespostas.disabled = false;
+            } else {
+                botao.disabled = true;
+                campoRespostas.disabled = true;
+            }
+        }
+
         async function corrigirProva() {
-    let matricula = document.getElementById("matriculaCorrecao").value.trim();
-    if (matricula === "") return;
+            let matricula = document.getElementById("matriculaCorrecao").value.trim();
+            if (matricula === "") return;
 
-    try {
-        if (matricula !== "1111111") {
-            let checkResponse = await fetch(`https://script.google.com/macros/s/AKfycbxs_5ydUNvbg5eu6IjvamXzinAnFlXeRmEpBptr8mEMT-GFzZ4uN2pj9Pit8nN2XT2lQQ/exec?Matricula=${matricula}`);
-            let checkData = await checkResponse.text();
+            if (matricula !== "1111111") {
+                let checkResponse = await fetch(`https://script.google.com/macros/s/AKfycbxs_5ydUNvbg5eu6IjvamXzinAnFlXeRmEpBptr8mEMT-GFzZ4uN2pj9Pit8nN2XT2lQQ/exec?Matricula=${matricula}`);
+                let checkData = await checkResponse.text();
 
-            if (checkData.includes("EXISTENTE")) {
-                document.getElementById("resultado").innerText = "Você já enviou sua resposta. Não é possível corrigir novamente.";
+                if (checkData.includes("EXISTENTE")) {
+                    document.getElementById("resultado").innerText = "Você já enviou sua resposta. Não é possível corrigir novamente.";
+                    return;
+                }
+            }
+
+            let respostas = document.getElementById("respostas").value.trim().split(",");
+            if (respostas.length !== 8) {
+                document.getElementById("resultado").innerText = "Por favor, insira exatamente 8 respostas separadas por vírgula.";
                 return;
             }
+
+            let dados = {
+                Matricula: matricula,
+                Data: new Date().toLocaleDateString(),
+                Hora: new Date().toLocaleTimeString(),
+                Nota: "Nota calculada aqui"
+            };
+
+            await fetch("https://script.google.com/macros/s/AKfycbxs_5ydUNvbg5eu6IjvamXzinAnFlXeRmEpBptr8mEMT-GFzZ4uN2pj9Pit8nN2XT2lQQ/exec", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dados)
+            });
+
+            document.getElementById("resultado").innerText = "Respostas enviadas e registradas com sucesso!";
         }
-
-        let respostas = document.getElementById("respostas").value.trim().split(",");
-        if (respostas.length !== 8) {
-            document.getElementById("resultado").innerText = "Por favor, insira exatamente 8 respostas separadas por vírgula.";
-            return;
-        }
-
-        let response = await fetch(`gabaritos/${matricula}.json`);
-        if (!response.ok) {
-            document.getElementById("resultado").innerText = "Matrícula não encontrada. Verifique se digitou corretamente.";
-            return;
-        }
-
-        let gabarito = await response.json();
-        let nota = 0;
-        let feedback = "<h2>Resultado:</h2><ul>";
-
-        for (let i = 0; i < 8; i++) {
-            let correto = parseFloat(gabarito[i]).toFixed(2);
-            let aluno = parseFloat(respostas[i]).toFixed(2);
-            if (correto === aluno) {
-                nota += 1.25;
-                feedback += `<li>Questão ${i + 1}: Correta</li>`;
-            } else {
-                feedback += `<li>Questão ${i + 1}: Errada (Correta: ${correto})</li>`;
-            }
-        }
-
-        feedback += `</ul><h3>Sua nota: ${nota.toFixed(2)}/10</h3>`;
-        document.getElementById("resultado").innerHTML = feedback;
-
-        // Enviar a nota para o Google Sheets
-        let dados = {
-            Matricula: matricula,
-            Data: new Date().toLocaleDateString(),
-            Hora: new Date().toLocaleTimeString(),
-            Nota: nota.toFixed(2)
-        };
-
-        let envioResponse = await fetch("https://script.google.com/macros/s/AKfycbxs_5ydUNvbg5eu6IjvamXzinAnFlXeRmEpBptr8mEMT-GFzZ4uN2pj9Pit8nN2XT2lQQ/exec", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(dados)
-        });
-
-        let envioResultado = await envioResponse.text();
-        console.log("Resposta do servidor:", envioResultado);
-
-    } catch (error) {
-        console.error("Erro ao processar a correção:", error);
-        document.getElementById("resultado").innerText = "Ocorreu um erro ao processar a correção.";
-        }
-    }
     </script>
-    </body>
-    </html>
+</body>
+</html>
+
+
+   

@@ -87,35 +87,59 @@
     </div>
 
     <script>
+        function baixarLista() {
+            var matricula = document.getElementById("matricula").value.trim();
+            var urlBase = "https://Bison-code.github.io/listas-probabilidade-EST202/listas/";
+
+            if (matricula === "") {
+                document.getElementById("mensagem").innerText = "Por favor, insira sua matrícula (SEM PONTUAÇÃO).";
+                return;
+            }
+
+            var arquivo = "lista_" + matricula + ".html";
+            var urlArquivo = urlBase + arquivo;
+
+            fetch(urlArquivo, { method: 'HEAD' })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = urlArquivo;
+                } else {
+                    document.getElementById("mensagem").innerText = "Matrícula não encontrada. Verifique e tente novamente.";
+                }
+            })
+            .catch(error => {
+                document.getElementById("mensagem").innerText = "Erro ao verificar a matrícula.";
+            });
+        }
+
         async function corrigirProva() {
             let matricula = document.getElementById("matriculaCorrecao").value.trim();
             if (matricula === "") return;
-            
-            // Verificar se a matrícula já enviou resposta antes, exceto 1111111
+
             let checkResponse = await fetch(`https://script.google.com/macros/s/AKfycbxs_5ydUNvbg5eu6IjvamXzinAnFlXeRmEpBptr8mEMT-GFzZ4uN2pj9Pit8nN2XT2lQQ/exec?matricula=${matricula}`);
             let checkData = await checkResponse.text();
-            
+
             if (matricula !== "1111111" && checkData.includes("EXISTENTE")) {
                 document.getElementById("resultado").innerText = "Você já enviou sua resposta. Não é possível corrigir novamente.";
                 return;
             }
-            
+
             let respostas = document.getElementById("respostas").value.trim().split(",");
             if (respostas.length !== 8) {
                 document.getElementById("resultado").innerText = "Por favor, insira exatamente 8 respostas separadas por vírgula.";
                 return;
             }
-            
+
             let response = await fetch(`gabaritos/${matricula}.json`);
             if (!response.ok) {
                 document.getElementById("resultado").innerText = "Matrícula não encontrada. Verifique se digitou corretamente.";
                 return;
             }
-            
+
             let gabarito = await response.json();
             let nota = 0;
             let feedback = "<h2>Resultado:</h2><ul>";
-            
+
             for (let i = 0; i < 8; i++) {
                 let correto = parseFloat(gabarito[i]).toFixed(2);
                 let aluno = parseFloat(respostas[i]).toFixed(2);
@@ -126,26 +150,9 @@
                     feedback += `<li>Questão ${i + 1}: ❌ Errada (Correta: ${correto})</li>`;
                 }
             }
-            
+
             feedback += `</ul><h3>Sua nota: ${nota.toFixed(2)}/10</h3>`;
             document.getElementById("resultado").innerHTML = feedback;
-            
-            let agora = new Date();
-            let dados = {
-                matricula: matricula,
-                data: agora.toLocaleDateString(),
-                hora: agora.toLocaleTimeString(),
-                nota: nota.toFixed(2)
-            };
-            
-            fetch("https://script.google.com/macros/s/AKfycbxs_5ydUNvbg5eu6IjvamXzinAnFlXeRmEpBptr8mEMT-GFzZ4uN2pj9Pit8nN2XT2lQQ/exec", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dados)
-            })
-            .then(response => response.text())
-            .then(data => console.log("Dados enviados com sucesso:", data))
-            .catch(error => console.error("Erro ao enviar os dados:", error));
         }
     </script>
 </body>

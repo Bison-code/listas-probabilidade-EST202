@@ -133,7 +133,7 @@
 
         // ⚡️ Verificar se a matrícula já enviou antes (exceto 1111111)
         if (matricula !== "1111111") {
-            let checkResponse = await fetch(`https://script.google.com/macros/s/AKfycbwFyeOgbp6YIW8RbPPrzed5cpSW5OCoh9yv8wqhUwNWVhxi5ahO_xpg6iz0G1jQZgwfPg/exec?Matricula=${matricula}`);
+            let checkResponse = await fetch(`https://script.google.com/macros/s/AKfycbxu4Hpnnn-UYj__VJemevZvnAcUmp7vMlnSKbZtMKiCkV7Xh8YqOfyt9_36L2gJuo3hxQ/exec?Matricula=${matricula}`);
             let checkData = await checkResponse.json();
 
             if (checkData.mensagem === "EXISTENTE") {
@@ -183,7 +183,7 @@
             Nota: nota.toFixed(2)
         };
 
-        let envioResponse = await fetch("https://script.google.com/macros/s/AKfycbwFyeOgbp6YIW8RbPPrzed5cpSW5OCoh9yv8wqhUwNWVhxi5ahO_xpg6iz0G1jQZgwfPg/exec", {
+        let envioResponse = await fetch("https://script.google.com/macros/s/AKfycbxu4Hpnnn-UYj__VJemevZvnAcUmp7vMlnSKbZtMKiCkV7Xh8YqOfyt9_36L2gJuo3hxQ/exec", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dados)

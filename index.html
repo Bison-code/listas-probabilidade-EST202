@@ -148,9 +148,9 @@
             let aluno = parseFloat(respostas[i]).toFixed(2);
             if (correto === aluno) {
                 nota += 1.25;
-                feedback += `<li>Questão ${i + 1}:  Correta</li>`;
+                feedback += `<li>Questão ${i + 1}: Correta</li>`;
             } else {
-                feedback += `<li>Questão ${i + 1}:  Errada (Correta: ${correto})</li>`;
+                feedback += `<li>Questão ${i + 1}: Errada (Correta: ${correto})</li>`;
             }
         }
 
@@ -159,14 +159,13 @@
 
         // Enviar a nota para o Google Sheets
         let dados = {
-            Matricula: matricula,  // Primeira letra maiúscula
+            Matricula: matricula,
             Data: new Date().toLocaleDateString(),
             Hora: new Date().toLocaleTimeString(),
             Nota: nota.toFixed(2)
-            };
+        };
 
-
-        let envioResponse = await fetch("SUA_URL_DO_WEBAPP", {
+        let envioResponse = await fetch("https://script.google.com/macros/s/AKfycbxs_5ydUNvbg5eu6IjvamXzinAnFlXeRmEpBptr8mEMT-GFzZ4uN2pj9Pit8nN2XT2lQQ/exec", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dados)
@@ -178,9 +177,8 @@
     } catch (error) {
         console.error("Erro ao processar a correção:", error);
         document.getElementById("resultado").innerText = "Ocorreu um erro ao processar a correção.";
+        }
     }
-}
-
     </script>
     </body>
     </html>

@@ -132,14 +132,14 @@
         }
 
         function atualizarTentativas(matricula) {
-            let maxTentativas = matricula === "1111111" ? "Ilimitadas" : `Tentativas: ${tentativas[matricula]}/2`;
+            let maxTentativas = matricula === "1111111" ? "Ilimitadas" : "Apenas 1 tentativa permitida";
             document.getElementById("tentativasMsg").innerText = maxTentativas;
         }
 
         async function corrigirProva() {
             let matricula = document.getElementById("matriculaCorrecao").value.trim();
-            if (matricula !== "1111111" && tentativas[matricula] >= 2) {
-                document.getElementById("resultado").innerText = "Você já realizou 2 tentativas. Não é possível corrigir novamente.";
+            if (matricula !== "1111111" && tentativas[matricula] >= 1) {
+                document.getElementById("resultado").innerText = "Você já realizou sua única tentativa. Não é possível corrigir novamente.";
                 return;
             }
             let respostas = document.getElementById("respostas").value.trim().split(",");

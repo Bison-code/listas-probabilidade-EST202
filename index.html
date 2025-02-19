@@ -127,41 +127,43 @@
             }
         }
 
-        async function corrigirProva() {
-            let matricula = document.getElementById("matriculaCorrecao").value.trim();
-            if (matricula === "") return;
+    <script>
+    async function corrigirProva() {
+        let matricula = document.getElementById("matriculaCorrecao").value.trim();
+        if (matricula === "") return;
 
-            if (matricula !== "1111111") {
-                let checkResponse = await fetch(`https://script.google.com/macros/s/AKfycbywL-SbBeqnupeCYp1P4wgMqtOf__p0I3P2NyK98kzFTGSuHrFTVZWOZtzP3oUdvR-kGQ/exec?Matricula=${matricula}`);
-                let checkData = await checkResponse.text();
+        if (matricula !== "1111111") {
+            let checkResponse = await fetch(`https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbywL-SbBeqnupeCYp1P4wgMqtOf__p0I3P2NyK98kzFTGSuHrFTVZWOZtzP3oUdvR-kGQ/exec/exec?Matricula=${matricula}`);
+            let checkData = await checkResponse.text();
 
-                if (checkData.includes("EXISTENTE")) {
-                    document.getElementById("resultado").innerText = "Você já enviou sua resposta. Não é possível corrigir novamente.";
-                    return;
-                }
-            }
-
-            let respostas = document.getElementById("respostas").value.trim().split(",");
-            if (respostas.length !== 8) {
-                document.getElementById("resultado").innerText = "Por favor, insira exatamente 8 respostas separadas por vírgula.";
+            if (checkData.includes("EXISTENTE")) {
+                document.getElementById("resultado").innerText = "Você já enviou sua resposta. Não é possível corrigir novamente.";
                 return;
             }
-
-            let dados = {
-                Matricula: matricula,
-                Data: new Date().toLocaleDateString(),
-                Hora: new Date().toLocaleTimeString(),
-                Nota: "Nota calculada aqui"
-            };
-
-            await fetch("https://script.google.com/macros/s/AKfycbywL-SbBeqnupeCYp1P4wgMqtOf__p0I3P2NyK98kzFTGSuHrFTVZWOZtzP3oUdvR-kGQ/exec", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dados)
-            });
-
-            document.getElementById("resultado").innerText = "Respostas enviadas e registradas com sucesso!";
         }
+
+        let respostas = document.getElementById("respostas").value.trim().split(",");
+        if (respostas.length !== 8) {
+            document.getElementById("resultado").innerText = "Por favor, insira exatamente 8 respostas separadas por vírgula.";
+            return;
+        }
+
+        let dados = {
+            Matricula: matricula,
+            Data: new Date().toLocaleDateString(),
+            Hora: new Date().toLocaleTimeString(),
+            Nota: "Nota calculada aqui"
+        };
+
+        await fetch("https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbywL-SbBeqnupeCYp1P4wgMqtOf__p0I3P2NyK98kzFTGSuHrFTVZWOZtzP3oUdvR-kGQ/exec/exec", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dados)
+        });
+
+        document.getElementById("resultado").innerText = "Respostas enviadas e registradas com sucesso!";
+    }
+    </script>
     </script>
 </body>
 </html>

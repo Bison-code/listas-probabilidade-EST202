@@ -136,12 +136,13 @@
         }
 
         function atualizarTentativas(matricula) {
-            document.getElementById("tentativasMsg").innerText = `Tentativas: ${tentativas[matricula]}/2`;
+            let maxTentativas = matricula === "1111111" ? "Ilimitadas" : `Tentativas: ${tentativas[matricula]}/2`;
+            document.getElementById("tentativasMsg").innerText = maxTentativas;
         }
 
         async function corrigirProva() {
             let matricula = document.getElementById("matriculaCorrecao").value.trim();
-            if (tentativas[matricula] >= 2) {
+            if (matricula !== "1111111" && tentativas[matricula] >= 2) {
                 document.getElementById("resultado").innerText = "Você já realizou 2 tentativas. Não é possível corrigir novamente.";
                 return;
             }
@@ -177,7 +178,9 @@
             
             feedback += `</ul><h3>Sua nota: ${nota.toFixed(2)}/10</h3>`;
             document.getElementById("resultado").innerHTML = feedback;
-            tentativas[matricula] += 1;
+            if (matricula !== "1111111") {
+                tentativas[matricula] += 1;
+            }
             atualizarTentativas(matricula);
         }
     </script>

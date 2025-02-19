@@ -131,7 +131,7 @@
             if (matricula === "") return;
 
             if (matricula !== "1111111") {
-                let checkResponse = await fetch(`https://script.google.com/macros/s/AKfycbwrkvuITXjAe2ajhZVU0N1kAOYuV13RLO_DEX3x0Kgy/exec?matricula=${matricula}`);
+                let checkResponse = await fetch(`https://script.google.com/macros/s/AKfycbywL-SbBeqnupeCYp1P4wgMqtOf__p0I3P2NyK98kzFTGSuHrFTVZWOZtzP3oUdvR-kGQ/exec?matricula=${matricula}`);
                 let checkData = await checkResponse.text();
 
                 if (checkData.includes("EXISTENTE")) {

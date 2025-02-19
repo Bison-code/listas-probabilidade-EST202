@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download das Listas de Exercícios</title>
+    <title>Download e Correção das Provas II</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,17 +42,24 @@
 <body>
 
     <div class="container">
-        <img src="logo-ufop.png" alt="Logo UFOP" style="max-width: 200px; margin-bottom: 10px;"> <!-- Substitua pelo logo da instituição -->
-        <h1>Listas de Exercícios</h1>
-        <h3>Disciplina: Probabilidade e Estatística</h3>
+        <img src="logo-ufop.png" alt="Logo UFOP"> 
+        <h1>Prova II - Parte 1</h1>
+        <h3>Disciplina: EST 202 - Estatística e Probabilidade</h3>
         <h4>Professor: Marcelo Ribeiro</h4>
-        <h4>Turma: 2024/1</h4>
+        <h4>Turma: 2024/2</h4>
         <p>Digite sua matrícula para baixar sua lista personalizada:</p>
         
         <input type="text" id="matricula" placeholder="Digite sua matrícula">
         <button onclick="baixarLista()">Baixar Lista</button>
         
         <p id="mensagem" style="color: red;"></p>
+        
+        <hr>
+        <h3>Correção Automática</h3>
+        <p>Digite suas respostas separadas por vírgula:</p>
+        <input type="text" id="respostas" placeholder="Ex: 0.75,0.68,0.85,0.92,0.78,0.65,0.88,0.72">
+        <button onclick="corrigirProva()">Corrigir Prova</button>
+        <p id="resultado"></p>
     </div>
 
     <script>
@@ -61,14 +68,13 @@
             var urlBase = "https://Bison-code.github.io/listas-probabilidade-EST202/listas/";
             
             if (matricula === "") {
-                document.getElementById("mensagem").innerText = "Por favor, insira sua matrícula.";
+                document.getElementById("mensagem").innerText = "Por favor, insira sua matrícula (SEM PONTUAÇÃO).";
                 return;
             }
 
             var arquivo = "lista_" + matricula + ".html";
             var urlArquivo = urlBase + arquivo;
 
-            // Verificar se o arquivo existe
             fetch(urlArquivo, { method: 'HEAD' })
             .then(response => {
                 if (response.ok) {
@@ -81,7 +87,42 @@
                 document.getElementById("mensagem").innerText = "Erro ao verificar a matrícula.";
             });
         }
-    </script>
 
+        async function corrigirProva() {
+            let matricula = document.getElementById("matricula").value.trim();
+            let respostas = document.getElementById("respostas").value.trim().split(",");
+            
+            if (respostas.length !== 8) {
+                document.getElementById("resultado").innerText = "Por favor, insira exatamente 8 respostas separadas por vírgula.";
+                return;
+            }
+            
+            let response = await fetch(`gabaritos/${matricula}.json`);
+            
+            if (!response.ok) {
+                document.getElementById("resultado").innerText = "Matrícula não encontrada. Verifique se digitou corretamente.";
+                return;
+            }
+            
+            let gabarito = await response.json();
+            let nota = 0;
+            let feedback = "<h2>Resultado:</h2><ul>";
+            
+            for (let i = 0; i < 8; i++) {
+                let correto = parseFloat(gabarito[i]).toFixed(2);
+                let aluno = parseFloat(respostas[i]).toFixed(2);
+                
+                if (correto === aluno) {
+                    nota += 1.25;
+                    feedback += `<li>Questão ${i + 1}: ✅ Correta</li>`;
+                } else {
+                    feedback += `<li>Questão ${i + 1}: ❌ Errada (Correta: ${correto})</li>`;
+                }
+            }
+            
+            feedback += `</ul><h3>Sua nota: ${nota.toFixed(2)}/10</h3>`;
+            document.getElementById("resultado").innerHTML = feedback;
+        }
+    </script>
 </body>
 </html>

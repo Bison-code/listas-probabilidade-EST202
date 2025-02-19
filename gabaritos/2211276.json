@@ -1,0 +1,10 @@
+[
+    "\\[ P(S) = 0.46, \\quad P(CLP) = 0.22, \\quad P(A) = 0.32 \\]",
+    "\\[ P(D|S) = 0.89, \\quad P(D|CLP) = 0.84, \\quad P(D|A) = 0.83 \\]",
+    "\\[ P(R1) = 0.52, \\quad P(R2) = 0.3, \\quad P(R3) = 0.18 \\]",
+    "\\[ P(D|R1) = 0.03, \\quad P(D|R2) = 0.06, \\quad P(D|R3) = 0.08 \\]",
+    "\\[ P(Rede) = 0.79, \\quad P(Gerador) = 0.15, \\quad P(Baterias) = 0.06 \\]",
+    "\\[ P(F|Rede) = 0.98, \\quad P(F|Gerador) = 0.93, \\quad P(F|Baterias) = 0.87 \\]",
+    "\\[ P(I|Desgaste) = 0.94, \\quad P(I|Sobrecarga) = 0.9 \\]",
+    "\\[ P(A|G) = 0.98, \\quad P(A|L) = 0.24 \\]"
+]

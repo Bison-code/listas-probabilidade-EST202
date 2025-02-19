@@ -25,8 +25,9 @@
         }
         .container {
             display: flex;
-            justify-content: center;
-            gap: 50px;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
             margin-top: 20px;
         }
         .box {
@@ -34,6 +35,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
         }
         input, button {
             font-size: 16px;
@@ -75,12 +77,16 @@
         </div>
 
         <div class="box">
-            <h3>Correção Automática</h3>
+            <h3>Envio de Respostas</h3>
             <p>Digite sua matrícula para habilitar o preenchimento das respostas:</p>
             <input type="text" id="matriculaCorrecao" placeholder="Digite sua matrícula" oninput="habilitarRespostas()">
             <p>Digite suas respostas separadas por vírgula:</p>
             <input type="text" id="respostas" placeholder="Ex: 0.75,0.68,0.85,0.92,0.78,0.65,0.88,0.72" disabled>
-            <button onclick="corrigirProva()" disabled id="botaoCorrigir">Corrigir Prova</button>
+            <button onclick="corrigirProva()" disabled id="botaoCorrigir">Enviar Respostas</button>
+        </div>
+
+        <div class="box">
+            <h3>Correção Automática</h3>
             <p id="tentativasMsg"></p>
             <p id="resultado"></p>
         </div>

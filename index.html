@@ -126,26 +126,9 @@
             }
         }
 
-       async function corrigirProva() {
+        async function corrigirProva() {
             let matricula = document.getElementById("matriculaCorrecao").value.trim();
             if (matricula === "") return;
-
-            let dados = {
-            Matricula: matricula,
-            Data: new Date().toLocaleDateString(),
-            Hora: new Date().toLocaleTimeString(),
-            Nota: "Nota calculada aqui"
-        };
-
-       await fetch("hhttps://script.google.com/macros/s/AKfycbw_DGQnx5UrbCcPebZ2o5gxJddYE7_c3KWs7oCeAL93eayEXbKRgqnM8smO_ksgZXKRNQ/exec", {  // Substitua pela nova URL
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dados)
-        })
-       .then(response => response.json())
-       .then(data => console.log("Resposta do servidor:", data))
-       .catch(error => console.error("Erro ao enviar dados:", error));
-       }
 
             let respostas = document.getElementById("respostas").value.trim().split(",");
             if (respostas.length !== 8) {
@@ -160,13 +143,19 @@
                 Nota: "Nota calculada aqui"
             };
 
-            await fetch("hhttps://script.google.com/macros/s/AKfycbw_DGQnx5UrbCcPebZ2o5gxJddYE7_c3KWs7oCeAL93eayEXbKRgqnM8smO_ksgZXKRNQ/exec", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dados)
-            });
+            try {
+                let response = await fetch("https://script.google.com/macros/s/AKfycbw_DGQnx5UrbCcPebZ2o5gxJddYE7_c3KWs7oCeAL93eayEXbKRgqnM8smO_ksgZXKRNQ/exec", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dados)
+                });
 
-            document.getElementById("resultado").innerText = "Respostas enviadas e registradas com sucesso!";
+                let result = await response.text();
+                document.getElementById("resultado").innerText = result;
+            } catch (error) {
+                document.getElementById("resultado").innerText = "Erro ao enviar respostas.";
+                console.error(error);
+            }
         }
     </script>
 </body>

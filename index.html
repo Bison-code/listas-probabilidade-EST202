@@ -91,6 +91,15 @@
             let matricula = document.getElementById("matriculaCorrecao").value.trim();
             if (matricula === "") return;
             
+            // Verificar se a matrícula já enviou resposta antes, exceto 1111111
+            let checkResponse = await fetch(`https://script.google.com/macros/s/AKfycbxs_5ydUNvbg5eu6IjvamXzinAnFlXeRmEpBptr8mEMT-GFzZ4uN2pj9Pit8nN2XT2lQQ/exec?matricula=${matricula}`);
+            let checkData = await checkResponse.text();
+            
+            if (matricula !== "1111111" && checkData.includes("EXISTENTE")) {
+                document.getElementById("resultado").innerText = "Você já enviou sua resposta. Não é possível corrigir novamente.";
+                return;
+            }
+            
             let respostas = document.getElementById("respostas").value.trim().split(",");
             if (respostas.length !== 8) {
                 document.getElementById("resultado").innerText = "Por favor, insira exatamente 8 respostas separadas por vírgula.";

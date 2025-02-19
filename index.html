@@ -154,6 +154,19 @@
             feedback += `</ul><h3>Sua nota: ${nota.toFixed(2)}/10</h3>`;
             document.getElementById("resultado").innerHTML = feedback;
         }
+        function habilitarRespostas() {
+            let matricula = document.getElementById("matriculaCorrecao").value.trim();
+            let botao = document.getElementById("botaoCorrigir");
+            let campoRespostas = document.getElementById("respostas");
+
+            if (matricula === "1111111" || matricula !== "") {
+            botao.disabled = false;
+            campoRespostas.disabled = false;
+        } else {
+            botao.disabled = true;
+            campoRespostas.disabled = true;
+            }
+        }
     </script>
-</body>
-</html>
+    </body>
+    </html>

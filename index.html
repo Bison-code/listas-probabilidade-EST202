@@ -9,11 +9,25 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+        }
+        .logo {
+            max-width: 150px;
         }
         .container {
             display: flex;
             justify-content: center;
             gap: 50px;
+            margin-top: 20px;
         }
         .box {
             max-width: 500px;
@@ -37,22 +51,22 @@
         button:hover {
             background-color: #0056b3;
         }
-        img {
-            max-width: 150px;
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
 
-    <h1>Prova II - Parte 1</h1>
-    <h3>Disciplina: EST 202 - Estatística e Probabilidade</h3>
-    <h4>Professor: Marcelo Ribeiro</h4>
-    <h4>Turma: 2024/2</h4>
+    <div class="header">
+        <img src="logo-ufop.png" alt="Logo UFOP" class="logo"> 
+        <div>
+            <h1>Prova II - Parte 1</h1>
+            <h3>Disciplina: EST 202 - Estatística e Probabilidade</h3>
+            <h4>Professor: Marcelo Ribeiro</h4>
+            <h4>Turma: 2024/2</h4>
+        </div>
+    </div>
     
     <div class="container">
         <div class="box">
-            <img src="logo-ufop.png" alt="Logo UFOP"> 
             <h3>Baixar Lista Personalizada</h3>
             <p>Digite sua matrícula:</p>
             <input type="text" id="matricula" placeholder="Digite sua matrícula">
@@ -62,14 +76,19 @@
 
         <div class="box">
             <h3>Correção Automática</h3>
+            <p>Digite sua matrícula para habilitar o preenchimento das respostas:</p>
+            <input type="text" id="matriculaCorrecao" placeholder="Digite sua matrícula" oninput="habilitarRespostas()">
             <p>Digite suas respostas separadas por vírgula:</p>
-            <input type="text" id="respostas" placeholder="Ex: 0.75,0.68,0.85,0.92,0.78,0.65,0.88,0.72">
-            <button onclick="corrigirProva()">Corrigir Prova</button>
+            <input type="text" id="respostas" placeholder="Ex: 0.75,0.68,0.85,0.92,0.78,0.65,0.88,0.72" disabled>
+            <button onclick="corrigirProva()" disabled id="botaoCorrigir">Corrigir Prova</button>
+            <p id="tentativasMsg"></p>
             <p id="resultado"></p>
         </div>
     </div>
 
     <script>
+        let tentativas = {};
+        
         function baixarLista() {
             var matricula = document.getElementById("matricula").value.trim();
             var urlBase = "https://Bison-code.github.io/listas-probabilidade-EST202/listas/";
@@ -95,8 +114,31 @@
             });
         }
 
+        function habilitarRespostas() {
+            let matricula = document.getElementById("matriculaCorrecao").value.trim();
+            let botao = document.getElementById("botaoCorrigir");
+            let respostas = document.getElementById("respostas");
+            
+            if (matricula !== "") {
+                respostas.disabled = false;
+                botao.disabled = false;
+                if (!(matricula in tentativas)) {
+                    tentativas[matricula] = 0;
+                }
+                atualizarTentativas(matricula);
+            }
+        }
+
+        function atualizarTentativas(matricula) {
+            document.getElementById("tentativasMsg").innerText = `Tentativas: ${tentativas[matricula]}/2`;
+        }
+
         async function corrigirProva() {
-            let matricula = document.getElementById("matricula").value.trim();
+            let matricula = document.getElementById("matriculaCorrecao").value.trim();
+            if (tentativas[matricula] >= 2) {
+                document.getElementById("resultado").innerText = "Você já realizou 2 tentativas. Não é possível corrigir novamente.";
+                return;
+            }
             let respostas = document.getElementById("respostas").value.trim().split(",");
             
             if (respostas.length !== 8) {
@@ -129,6 +171,8 @@
             
             feedback += `</ul><h3>Sua nota: ${nota.toFixed(2)}/10</h3>`;
             document.getElementById("resultado").innerHTML = feedback;
+            tentativas[matricula] += 1;
+            atualizarTentativas(matricula);
         }
     </script>
 </body>
